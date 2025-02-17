@@ -2,7 +2,7 @@
     "name": "hellomage/delete-creditmemo",
     "description": "delete credit-memo magento 2 admin module",
     "type": "magento2-module",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "license": [
         "OSL-3.0"
     ],
