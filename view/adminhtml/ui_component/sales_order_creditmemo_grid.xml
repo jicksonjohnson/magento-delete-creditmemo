@@ -5,7 +5,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade to newer versions in the future.
  * If you wish to customise this module for your needs.
- * Please contact us info@hellomage.com
+ * Please contact us jicksonkoottala@gmail.com
  *
  * @category   HelloMage
  * @package    HelloMage_DeleteCreditmemo
@@ -17,12 +17,12 @@
          xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
     <listingToolbar name="listing_top">
         <massaction name="listing_massaction">
-            <action name="delete_creditmemos">
+            <action name="mass_delete_creditmemos">
                 <argument name="data" xsi:type="array">
                     <item name="config" xsi:type="array">
                         <item name="type" xsi:type="string">hellomage_deleteCreditmemo</item>
                         <item name="label" xsi:type="string" translate="true">Delete Credit Memos</item>
-                        <item name="url" xsi:type="url" path="delete-creditmemo/delete/massCreditmemo"/>
+                        <item name="url" xsi:type="url" path="deletecreditmemo/delete/massCreditmemo"/>
                         <item name="confirm" xsi:type="array">
                             <item name="title" xsi:type="string" translate="true">Delete Credit Memos</item>
                             <item name="message" xsi:type="string" translate="true">Are you sure you want to delete selected credit memo(s) ?</item>

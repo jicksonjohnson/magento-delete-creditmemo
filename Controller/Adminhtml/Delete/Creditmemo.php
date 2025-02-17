@@ -4,13 +4,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade to newer versions in the future.
  * If you wish to customise this module for your needs.
- * Please contact us info@hellomage.com
+ * Please contact us jicksonkoottala@gmail.com
  *
  * @category   HelloMage
  * @package    HelloMage_DeleteCreditmemo
  * @copyright  Copyright (C) 2020 HELLOMAGE PVT LTD (https://www.hellomage.com/)
  * @license    https://www.hellomage.com/magento2-osl-3-0-license/
  */
+
+declare(strict_types=1);
 
 namespace HelloMage\DeleteCreditmemo\Controller\Adminhtml\Delete;
 
@@ -27,20 +29,10 @@ use Magento\Sales\Api\CreditmemoRepositoryInterface;
  */
 class Creditmemo extends Action
 {
-    /**
-     * @var CreditmemoRepositoryInterface
-     */
-    protected $creditmemoRepository;
+    protected CreditmemoRepositoryInterface $creditmemoRepository;
 
-    /**
-     * @var Delete
-     */
-    protected $delete;
-
-    /**
-     * @var SystemConfig
-     */
-    protected $systemConfig;
+    protected Delete $delete;
+    protected SystemConfig $systemConfig;
 
     /**
      * Creditmemo constructor.
@@ -78,28 +70,27 @@ class Creditmemo extends Action
             try {
                 $this->delete->deleteCreditmemo($creditmemoId);
                 $this->messageManager->addSuccessMessage(__('Successfully deleted credit-memo #%1.', $creditmemo->getIncrementId()));
-
                 if ($redirect_page == 'order-view') {
+                    // redirecting to relative order page
                     $resultRedirect->setPath('sales/order/view', ['order_id' => $orderId]); // redirecting to relative order page
                 } elseif ($redirect_page == 'credit-memo-listing') {
-                    $resultRedirect->setPath('sales/creditmemo/'); // redirecting to invoice listing
+                    // redirecting to creditmemo listing
+                    $resultRedirect->setPath('sales/creditmemo/');
                 } else {
-                    $resultRedirect->setPath('sales/order'); // redirecting to order listing page
+                    // redirecting to order listing
+                    $resultRedirect->setPath('sales/order');
                 }
-
                 return $resultRedirect;
-
             } catch (Exception $e) {
                 $this->messageManager->addErrorMessage(__('Error delete credit-memo #%1.', $creditmemo->getIncrementId()));
-                $resultRedirect->setPath('sales/creditmemo/view', ['creditmemo_id' => $creditmemoId]); // redirecting to invoice listing
-
+                // redirecting to creditmemo view
+                $resultRedirect->setPath('sales/creditmemo/view', ['creditmemo_id' => $creditmemoId]);
                 return $resultRedirect;
             }
-
         } else {
             $this->messageManager->addErrorMessage(__('You are not authorized to delete or delete feature disabled. please check the ACL and HelloMage Delete Credit-memo module settings'));
-            $resultRedirect->setPath('sales/creditmemo/view', ['creditmemo_id' => $creditmemoId]); // redirecting to invoice listing
-
+            // redirecting to creditmemo listing
+            $resultRedirect->setPath('sales/creditmemo/view', ['creditmemo_id' => $creditmemoId]);
             return $resultRedirect;
         }
     }

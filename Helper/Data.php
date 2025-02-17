@@ -4,7 +4,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade to newer versions in the future.
  * If you wish to customise this module for your needs.
- * Please contact us info@hellomage.com
+ * Please contact us jicksonkoottala@gmail.com
  *
  * @category   HelloMage
  * @package    HelloMage_DeleteCreditmemo
@@ -12,11 +12,16 @@
  * @license    https://www.hellomage.com/magento2-osl-3-0-license/
  */
 
+declare(strict_types=1);
+
 namespace HelloMage\DeleteCreditmemo\Helper;
 
 use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\App\Helper\Context;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Framework\Config\ConfigOptionsListConstants;
+use Magento\Framework\Exception\FileSystemException;
+use Magento\Framework\Exception\RuntimeException;
 
 /**
  * Class Data
@@ -24,27 +29,40 @@ use Magento\Framework\Config\ConfigOptionsListConstants;
  */
 class Data extends \Magento\Framework\App\Helper\AbstractHelper
 {
-    /**
-     * @var DeploymentConfig
-     */
-    protected $deploymentConfig;
+    protected DeploymentConfig $deploymentConfig;
+
+    protected ResourceConnection $resourceConnection;
 
     /**
      * Data constructor.
      * @param Context $context
      * @param DeploymentConfig $deploymentConfig
+     * @param ResourceConnection $resourceConnection
      */
     public function __construct(
         Context $context,
-        DeploymentConfig $deploymentConfig
+        DeploymentConfig $deploymentConfig,
+        \Magento\Framework\App\ResourceConnection $resourceConnection
     ) {
         parent::__construct($context);
         $this->deploymentConfig = $deploymentConfig;
+        $this->resourceConnection = $resourceConnection;
+    }
+
+    /**
+     * Get Table name using direct query
+     */
+    public function getConnection()
+    {
+        /* Create Connection */
+        return $this->resourceConnection->getConnection();
     }
 
     /**
      * @param null $name
      * @return bool|string|null
+     * @throws FileSystemException
+     * @throws RuntimeException
      */
     public function getTableName($name = null)
     {
@@ -61,6 +79,7 @@ class Data extends \Magento\Framework\App\Helper\AbstractHelper
             $tableName = $tablePrefix . $name;
         }
 
-        return $tableName;
+        $connection = $this->getConnection();
+        return $connection->getTableName($tableName);
     }
 }

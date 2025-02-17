@@ -4,7 +4,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade to newer versions in the future.
  * If you wish to customise this module for your needs.
- * Please contact us info@hellomage.com
+ * Please contact us jicksonkoottala@gmail.com
  *
  * @category   HelloMage
  * @package    HelloMage_DeleteCreditmemo
@@ -12,8 +12,12 @@
  * @license    https://www.hellomage.com/magento2-osl-3-0-license/
  */
 
-\Magento\Framework\Component\ComponentRegistrar::register(
-    \Magento\Framework\Component\ComponentRegistrar::MODULE,
+declare(strict_types=1);
+
+use Magento\Framework\Component\ComponentRegistrar;
+
+ComponentRegistrar::register(
+    ComponentRegistrar::MODULE,
     'HelloMage_DeleteCreditmemo',
     __DIR__
 );

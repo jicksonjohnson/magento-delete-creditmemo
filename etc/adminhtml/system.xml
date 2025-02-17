@@ -5,7 +5,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade to newer versions in the future.
  * If you wish to customise this module for your needs.
- * Please contact us info@hellomage.com
+ * Please contact us jicksonkoottala@gmail.com
  *
  * @category   HelloMage
  * @package    HelloMage_DeleteCreditmemo
@@ -16,12 +16,12 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
     <system>
-        <tab id="hello-mage" translate="label" sortOrder="500">
+        <tab id="hellomage" translate="label" sortOrder="500">
             <label>HelloMage Extensions</label>
         </tab>
-        <section id="hm-delete-credit-memo" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
+        <section id="hmdeletecreditmemo" translate="label" type="text" sortOrder="100" showInDefault="1" showInWebsite="0" showInStore="0">
             <label>HelloMage - Delete Credit-memo settings</label>
-            <tab>hello-mage</tab>
+            <tab>hellomage</tab>
             <resource>HelloMage_DeleteCreditmemo::config</resource>
             <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="0" showInStore="0">
                 <label>General</label>

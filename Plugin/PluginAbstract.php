@@ -4,13 +4,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade to newer versions in the future.
  * If you wish to customise this module for your needs.
- * Please contact us info@hellomage.com
+ * Please contact us jicksonkoottala@gmail.com
  *
  * @category   HelloMage
  * @package    HelloMage_DeleteCreditmemo
  * @copyright  Copyright (C) 2020 HELLOMAGE PVT LTD (https://www.hellomage.com/)
  * @license    https://www.hellomage.com/magento2-osl-3-0-license/
  */
+
+declare(strict_types=1);
 
 namespace HelloMage\DeleteCreditmemo\Plugin;
 
@@ -24,20 +26,9 @@ use Magento\Backend\Model\Auth\Session;
  */
 class PluginAbstract
 {
-    /**
-     * @var AclRetriever
-     */
-    protected $aclRetriever;
+    protected AclRetriever $aclRetriever;
 
-    /**
-     * @var Session
-     */
-    protected $authSession;
-
-    /**
-     * @var SystemConfig
-     */
-    protected $systemConfig;
+    protected Session $authSession;
 
     /**
      * PluginAbstract constructor.
@@ -47,12 +38,10 @@ class PluginAbstract
      */
     public function __construct(
         AclRetriever $aclRetriever,
-        Session $authSession,
-        SystemConfig $systemConfig
+        Session $authSession
     ) {
         $this->aclRetriever = $aclRetriever;
         $this->authSession = $authSession;
-        $this->systemConfig = $systemConfig;
     }
 
     /**
@@ -65,10 +54,8 @@ class PluginAbstract
         $role = $user->getRole();
         $resources = $this->aclRetriever->getAllowedResourcesByRole($role->getId());
 
-        if ($this->systemConfig->IsEnabled()) {
-            if (in_array("Magento_Backend::all", $resources) || in_array("HelloMage_DeleteCreditmemo::delete", $resources)) {
-                return true;
-            }
+        if (in_array("Magento_Backend::all", $resources) || in_array("HelloMage_DeleteCreditmemo::delete", $resources)) {
+            return true;
         }
 
         return false;

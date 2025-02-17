@@ -4,13 +4,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade to newer versions in the future.
  * If you wish to customise this module for your needs.
- * Please contact us info@hellomage.com
+ * Please contact us jicksonkoottala@gmail.com
  *
  * @category   HelloMage
  * @package    HelloMage_DeleteCreditmemo
  * @copyright  Copyright (C) 2020 HELLOMAGE PVT LTD (https://www.hellomage.com/)
  * @license    https://www.hellomage.com/magento2-osl-3-0-license/
  */
+
+declare(strict_types=1);
 
 namespace HelloMage\DeleteCreditmemo\Plugin\Creditmemo;
 
@@ -27,30 +29,20 @@ use Magento\Sales\Block\Adminhtml\Order\Creditmemo\View;
  */
 class PluginAfter extends PluginAbstract
 {
-    /**
-     * @var Data
-     */
-    protected $data;
-
-    /**
-     * @var SystemConfig
-     */
-    protected $systemConfig;
+    protected Data $data;
 
     /**
      * PluginAfter constructor.
      * @param AclRetriever $aclRetriever
      * @param Session $authSession
      * @param Data $data
-     * @param SystemConfig $systemConfig
      */
     public function __construct(
         AclRetriever $aclRetriever,
         Session $authSession,
-        SystemConfig $systemConfig,
         Data $data
     ) {
-        parent::__construct($aclRetriever, $authSession, $systemConfig);
+        parent::__construct($aclRetriever, $authSession);
         $this->data = $data;
     }
 
@@ -88,7 +80,7 @@ class PluginAfter extends PluginAbstract
     public function getDeleteUrl($creditmemoId)
     {
         return $this->data->getUrl(
-            'delete-creditmemo/delete/creditmemo',
+            'deletecreditmemo/delete/creditmemo',
             [
                 'creditmemo_id' => $creditmemoId
             ]

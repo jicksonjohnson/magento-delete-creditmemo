@@ -4,7 +4,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade to newer versions in the future.
  * If you wish to customise this module for your needs.
- * Please contact us info@hellomage.com
+ * Please contact us jicksonkoottala@gmail.com
  *
  * @category   HelloMage
  * @package    HelloMage_DeleteCreditmemo
@@ -12,17 +12,19 @@
  * @license    https://www.hellomage.com/magento2-osl-3-0-license/
  */
 
+declare(strict_types=1);
+
 namespace HelloMage\DeleteCreditmemo\Controller\Adminhtml\Delete;
 
 use HelloMage\DeleteCreditmemo\Helper\Config as SystemConfig;
 use HelloMage\DeleteCreditmemo\Model\Creditmemo\Delete;
 
-use Magento\Backend\App\Action\Context;
 use Magento\Framework\Model\ResourceModel\Db\Collection\AbstractCollection;
+use Magento\Backend\App\Action\Context;
+use Magento\Ui\Component\MassAction\Filter;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 use Magento\Sales\Api\CreditmemoRepositoryInterface;
 use Magento\Sales\Api\OrderManagementInterface;
-use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
-use Magento\Ui\Component\MassAction\Filter;
 
 /**
  * Class MassCreditmemo
@@ -30,30 +32,15 @@ use Magento\Ui\Component\MassAction\Filter;
  */
 class MassCreditmemo extends \Magento\Sales\Controller\Adminhtml\Order\AbstractMassAction
 {
-    /**
-     * @var OrderManagementInterface
-     */
-    protected $orderManagement;
+    protected OrderManagementInterface $orderManagement;
 
-    /**
-     * @var \Magento\Sales\Model\ResourceModel\Order\Creditmemo\CollectionFactory
-     */
-    protected $creditmemoCollectionFactory;
+    protected \Magento\Sales\Model\ResourceModel\Order\Creditmemo\CollectionFactory $creditmemoCollectionFactory;
 
-    /**
-     * @var CreditmemoRepositoryInterface
-     */
-    protected $creditmemoRepository;
+    protected CreditmemoRepositoryInterface $creditmemoRepository;
 
-    /**
-     * @var Delete
-     */
-    protected $delete;
+    protected Delete $delete;
 
-    /**
-     * @var SystemConfig
-     */
-    protected $systemConfig;
+    protected SystemConfig $systemConfig;
 
     /**
      * MassCreditmemo constructor.
@@ -103,25 +90,18 @@ class MassCreditmemo extends \Magento\Sales\Controller\Adminhtml\Order\AbstractM
             foreach ($collectionCreditmemo as $creditmemo) {
                 array_push($selected, $creditmemo->getId());
             }
-
             if ($selected) {
                 foreach ($selected as $creditmemoId) {
                     $creditmemo = $this->creditmemoRepository->get($creditmemoId);
                     try {
-                        $order = $this->deleteCreditmemo($creditmemoId);
-
+                        $this->deleteCreditmemo($creditmemoId);
                         $this->messageManager->addSuccessMessage(__('Successfully deleted credit memo #%1.', $creditmemo->getIncrementId()));
                     } catch (\Exception $e) {
                         $this->messageManager->addErrorMessage(__('Error delete credit memo #%1.', $creditmemo->getIncrementId()));
                     }
                 }
             }
-
-            if ($params['namespace'] == 'sales_order_view_creditmemo_grid') {
-                $resultRedirect->setPath('sales/order/view', ['order_id' => $order->getId()]);
-            } else {
-                $resultRedirect->setPath('sales/creditmemo/');
-            }
+            $resultRedirect->setPath('sales/creditmemo/');
             return $resultRedirect;
         } else {
             $this->messageManager->addErrorMessage(__('You are not authorized to delete or delete feature disabled. please check the ACL and HelloMage Delete Credit-memo module settings'));

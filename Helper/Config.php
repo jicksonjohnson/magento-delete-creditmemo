@@ -4,13 +4,15 @@
  *
  * Do not edit or add to this file if you wish to upgrade to newer versions in the future.
  * If you wish to customise this module for your needs.
- * Please contact us info@hellomage.com
+ * Please contact us jicksonkoottala@gmail.com
  *
  * @category   HelloMage
  * @package    HelloMage_DeleteCreditmemo
  * @copyright  Copyright (C) 2020 HELLOMAGE PVT LTD (https://www.hellomage.com/)
  * @license    https://www.hellomage.com/magento2-osl-3-0-license/
  */
+
+declare(strict_types=1);
 
 namespace HelloMage\DeleteCreditmemo\Helper;
 
@@ -25,39 +27,25 @@ use Magento\Store\Model\StoreManagerInterface;
  */
 class Config
 {
-    const XML_PATH_IS_ENABLED     = 'hm-delete-credit-memo/general/is_enabled';
-    const XML_PATH_REDIRECT_PAGE  = 'hm-delete-credit-memo/general/redirect_page';
-    const XML_PATH_EMAIL_IDENTITY = 'hm-delete-credit-memo/general/identity';
-    const XML_PATH_EMAIL_COPY_TO  = 'hm-delete-credit-memo/general/copy_to';
+    const XML_PATH_IS_ENABLED     = 'hmdeletecreditmemo/general/is_enabled';
+    const XML_PATH_REDIRECT_PAGE  = 'hmdeletecreditmemo/general/redirect_page';
+    const XML_PATH_EMAIL_IDENTITY = 'hmdeletecreditmemo/general/identity';
+    const XML_PATH_EMAIL_COPY_TO  = 'hmdeletecreditmemo/general/copy_to';
 
-    /**
-     * @var StoreManagerInterface
-     */
-    protected $_storeManager;
+    protected StoreManagerInterface $_storeManager;
 
-    /**
-     * @var ScopeConfigInterface
-     */
-    private $scopeConfig;
-
-    /**
-     * @var UrlInterface
-     */
-    private $urlBuilder;
+    private ScopeConfigInterface $scopeConfig;
 
     /**
      * @param StoreManagerInterface $storeManager
      * @param ScopeConfigInterface $scopeConfig
-     * @param UrlInterface $urlBuilder
      */
     public function __construct(
         StoreManagerInterface $storeManager,
-        ScopeConfigInterface $scopeConfig,
-        UrlInterface $urlBuilder
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->_storeManager = $storeManager;
         $this->scopeConfig = $scopeConfig;
-        $this->urlBuilder = $urlBuilder;
     }
 
     /**

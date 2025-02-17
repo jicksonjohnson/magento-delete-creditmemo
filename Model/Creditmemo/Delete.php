@@ -4,7 +4,7 @@
  *
  * Do not edit or add to this file if you wish to upgrade to newer versions in the future.
  * If you wish to customise this module for your needs.
- * Please contact us info@hellomage.com
+ * Please contact us jicksonkoottala@gmail.com
  *
  * @category   HelloMage
  * @package    HelloMage_DeleteCreditmemo
@@ -12,12 +12,15 @@
  * @license    https://www.hellomage.com/magento2-osl-3-0-license/
  */
 
+declare(strict_types=1);
+
 namespace HelloMage\DeleteCreditmemo\Model\Creditmemo;
 
 use Exception;
 use HelloMage\DeleteCreditmemo\Helper\Data;
 use HelloMage\DeleteCreditmemo\Mail\SendNotification;
 use Magento\Backend\Model\Auth\Session;
+use Magento\Framework\App\ResourceConnection;
 use Magento\Sales\Api\CreditmemoRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Psr\Log\LoggerInterface;
@@ -28,38 +31,26 @@ use Psr\Log\LoggerInterface;
  */
 class Delete
 {
-    /**
-     * @var Data
-     */
-    protected $data;
+    protected ResourceConnection $resource;
 
     /**
-     * @var CreditmemoRepositoryInterface
+     * @var
      */
-    protected $creditmemoRepository;
+    protected Data $data;
 
-    /**
-     * @var Order
-     */
-    protected $order;
+    protected CreditmemoRepositoryInterface $creditmemoRepository;
 
-    /**
-     * @var LoggerInterface
-     */
-    private $logger;
+    protected Order $order;
 
-    /**
-     * @var SendNotification
-     */
-    protected $sendNotification;
+    private LoggerInterface $logger;
 
-    /**
-     * @var Session
-     */
-    protected $_authSession;
+    protected SendNotification $sendNotification;
+
+    protected Session $_authSession;
 
     /**
      * Delete constructor.
+     * @param ResourceConnection $resource
      * @param Data $data
      * @param Order $order
      * @param CreditmemoRepositoryInterface $creditmemoRepository
@@ -68,6 +59,7 @@ class Delete
      * @param Session $authSession
      */
     public function __construct(
+        ResourceConnection $resource,
         Data $data,
         Order $order,
         CreditmemoRepositoryInterface $creditmemoRepository,
@@ -75,6 +67,7 @@ class Delete
         SendNotification $sendNotification,
         Session $authSession
     ) {
+        $this->resource = $resource;
         $this->data = $data;
         $this->order = $order;
         $this->creditmemoRepository = $creditmemoRepository;
@@ -90,6 +83,10 @@ class Delete
      */
     public function deleteCreditmemo($creditmemoId)
     {
+        $connection = $this->data->getConnection();
+        $creditmemoGridTable = $this->data->getTableName('sales_creditmemo_grid');
+        $creditmemoTable = $this->data->getTableName('sales_creditmemo');
+
         $creditmemo = $this->creditmemoRepository->get($creditmemoId);
         $orderId = $creditmemo->getOrder()->getId();
         $order = $this->order->load($orderId);
@@ -159,6 +156,10 @@ class Delete
 
         $this->setTotalandBaseTotal($creditmemo, $order);
 
+        // delete creditmemo info
+        $connection->rawQuery('DELETE FROM `'.$creditmemoGridTable.'` WHERE entity_id='.$creditmemoId);
+        $connection->rawQuery('DELETE FROM `'.$creditmemoTable.'` WHERE entity_id='.$creditmemoId);
+
         try {
             $creditmemoData = $this->creditmemoRepository->get($creditmemoId);
             $data_to_send = [
@@ -169,9 +170,11 @@ class Delete
                 'deleted_at' => date("Y-m-d h:i:s"),
                 'store_id' => $creditmemoData->getStoreId()
             ];
+
             //delete credit-memo by credit-memo object
             $this->creditmemoRepository->delete($creditmemoData);
             $this->saveOrder($order);
+
             $this->sendNotification->sendEmail($data_to_send);
         } catch (Exception $exception) {
             $this->logger->critical($exception->getMessage());
