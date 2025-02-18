@@ -1,6 +1,6 @@
 {
     "name": "hellomage/delete-creditmemo",
-    "description": "delete credit-memo magento 2 admin module",
+    "description": "delete credit-memo extension for magento",
     "type": "magento2-module",
     "version": "1.0.3",
     "license": [
